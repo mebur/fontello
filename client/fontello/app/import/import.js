@@ -3,7 +3,7 @@
 
 var JSZip   = require('jszip');
 var _       = require('lodash');
-var XMLDOMParser = require('xmldom').DOMParser;
+var XMLDOMParser = require('@xmldom/xmldom').DOMParser;
 var SvgPath = require('svgpath');
 
 var utils   = require('../../_lib/utils');
@@ -80,10 +80,12 @@ function import_config(str, file) {
 
     _.each(config.glyphs, function (g) {
 
+      var glyph;
+
       if (!getFont(g.src)) { return; }
 
       if (g.src === 'custom_icons') {
-        customIcons.addGlyph({
+        glyph = customIcons.addGlyph({
           uid:      g.uid,
           css:      g.css,
           code:     g.code,
@@ -95,16 +97,20 @@ function import_config(str, file) {
             width:   g.svg.width
           }
         });
+        // flag this glyph as just imported to prevent overriding code in code_tracker
+        glyph._imported = true;
         return;
       }
 
-      var glyph = glyphById[g.uid];
+      glyph = glyphById[g.uid];
 
       if (!glyph) { return; }
 
       glyph.toggleSelect(true);
       glyph.code(g.code || glyph.originalCode);
       glyph.name(g.css || glyph.originalName);
+      // flag this glyph as just imported to prevent overriding code in code_tracker
+      glyph._imported = true;
     });
   } catch (e) {
     N.wire.emit('notify', t('err_bad_config_format', { name: file.name }));
@@ -244,7 +250,7 @@ function import_svg_image(data, file) {
   var skipped = _.union(result.ignoredTags, result.ignoredAttrs);
 
   if (skipped.length > 0) {
-    N.wire.emit('notify', t('err_skiped_tags', { skipped: skipped.toString() }));
+    N.wire.emit('notify', t('err_skipped_tags', { skipped: skipped.toString() }));
   } else if (!result.guaranteed) {
     N.wire.emit('notify', t('err_merge_path'));
   }

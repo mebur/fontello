@@ -1,6 +1,8 @@
 9.0.0 / WIP
 ------------------
 
+- (!) Switched to SSL. If you use API - update request links from
+  `http://...` to `https://...` in your scripts.
 - Bump `svg2ttf` to v5+. `USE_TYPO_METRICS` bit of `OS/2.fsSelection` is now
   set. Should fix Windows line spacing issues.
 - CSS `speak: none` => `speak: never`, #702.
@@ -8,8 +10,14 @@
 - Fix slow select on big custom collections, #583.
 - Fix waiting on `level-ttl` write (caused races in tests).
 - Switch to `ko` deferred updates.
-- Use node.js 10+.
-- Deps bump
+- Gzip client requests to server (when config been sent).
+- Fix deferred updates issues, #714.
+- Fix `os.tmpDir` => `os.tmpdir`, #712.
+- Fix antialiasing properies in CSS wih embedded fonts, #652.
+- Fix ttfautohint options (drop '--windows-compatibility'), #713.
+- New deploy process via docker.
+- Use node.js 14 for CI & deploy.
+- Deps bump.
 - Nodeca core resync.
 
 

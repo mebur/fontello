@@ -71,7 +71,7 @@ module.exports = function (N, apiPath) {
       clientConfig: data.config,
       builderConfig,
       cwdDir: N.mainApp.root,
-      tmpDir: path.join(os.tmpDir(), 'fontello', `fontello-${data.fontId.substr(0, 8)}`),
+      tmpDir: path.join(os.tmpdir(), 'fontello', `fontello-${data.fontId.substr(0, 8)}`),
       timestamp: Date.now(),
       result: null,
       logger
@@ -84,7 +84,17 @@ module.exports = function (N, apiPath) {
     logger.info('New job created: %j', { font_id: data.fontId, queue_length: Object.keys(tasks).length });
 
     // Wait for task finished
-    let zipData = await taskInfo.result;
+    let zipData;
+
+    try {
+      zipData = await taskInfo.result;
+    } catch (err) {
+      // show error message to the client (e.g. invalid glyph, #746)
+      throw {
+        code: N.io.CLIENT_ERROR,
+        message: `Cannot generate font: ${err.message || err}`
+      };
+    }
 
     // N.downloads.put is a function from `level-ttl`
     // that does not support promises (just always returns undefined)

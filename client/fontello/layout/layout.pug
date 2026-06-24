@@ -36,64 +36,62 @@ html.no-js(lang='en', itemscope, itemtype='http://schema.org/WebPage')
 
   body
     .layout__fixed
-      nav.layout__navbar.navbar.navbar-inverse.navbar-static-top
-        .container
-          .navbar-header
-            button.navbar-toggle(
-              data-toggle='collapse',
-              data-target='.navbar-collapse',
-              type='button'
-            )
-              span.icon-bar
-              span.icon-bar
-              span.icon-bar
+      .layout__navbar.navbar.navbar-dark.bg-dark.navbar-static-top.navbar-expand-md
+        .container-fluid
+          a.navbar-brand(href="/")= self.t('title')
 
-            a.navbar-brand(href="/")= self.t('title')
+          button.navbar-toggler(
+            data-bs-toggle='collapse',
+            data-bs-target='.navbar-collapse',
+            type='button'
+          )
+            span.navbar-toggler-icon
 
           //- top menu
           .navbar-collapse.collapse
-            ul.nav.navbar-nav
-              li.dropdown
-                a.dropdown-toggle(data-toggle='dropdown', href='#')
+            ul.navbar-nav
+              li.nav-item.dropdown
+                a.nav-link.dropdown-toggle(data-bs-toggle='dropdown', href='#')
                   = self.t('menu_feedback')
-                  b.caret
                 ul.dropdown-menu._popover(
-                  data-content=self.t('menu_bugreports_help'),
-                  data-placement='right',
-                  data-trigger='hover',
-                  data-container='.layout__fixed'
-                  data-delay='{"show":500,"hide":100}'
+                  data-bs-content=self.t('menu_bugreports_help'),
+                  data-bs-placement='right',
+                  data-bs-trigger='hover',
+                  data-bs-container='.layout__fixed'
                 )
-                  li: a(href="https://groups.google.com/group/fontello", target="_blank")= self.t('menu_discuss')
-                  li: a(href="https://github.com/fontello/fontello/wiki/How-to-help", target="_blank")= self.t('menu_how_to_help')
-                  li: a(href="https://github.com/fontello/fontello/issues", target="_blank")= self.t('menu_bugreports')
+                  li: a.dropdown-item(href="https://gitter.im/fontello/fontello", target="_blank")= self.t('menu_discuss')
+                  li: a.dropdown-item(href="https://github.com/fontello/fontello/wiki/How-to-help", target="_blank")= self.t('menu_how_to_help')
+                  li: a.dropdown-item(href="https://github.com/fontello/fontello/issues", target="_blank")= self.t('menu_bugreports')
 
-              li: a(href="https://github.com/fontello/fontello#developers-api", target="_blank") API
-              li: a(href="https://github.com/fontello/fontello", target="_blank") GitHub
+              li.nav-item
+                a.nav-link(href="https://github.com/fontello/fontello#developers-api", target="_blank") API
 
-            ul.nav.navbar-nav.hidden-sm
-              li: a.twitter-follow-button(href="https://twitter.com/puzrin", data-show-count="false", data-show-screen-name="false")= self.t('twitter_follow')
-              li: a.twitter-share-button(href="https://twitter.com/share", data-url="http://fontello.com", data-text=self.t('twitter_text'))= self.t('twitter_share')
-              li.gplus
+              li.nav-item
+                a.nav-link(href="https://github.com/fontello/fontello", target="_blank") GitHub
+
+            ul.navbar-nav.hidden-sm
+              li.nav-item
+                a.nav-link.twitter-follow-button(href="https://twitter.com/puzrin", data-show-count="false", data-show-screen-name="false")= self.t('twitter_follow')
+
+              li.nav-item
+                a.nav-link.twitter-share-button(href="https://twitter.com/share", data-url="https://fontello.com", data-text=self.t('twitter_text'))= self.t('twitter_share')
+
+              li.nav-item.gplus
                 .g-plusone(data-size="medium")
 
-            ul.nav.navbar-nav.navbar-right
-              li: a(
-                target='_blank',
-                href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=575L9QR4V5TNU',
-                data-content=self.t('menu_donate_help'),
-                data-placement='bottom',
-                data-trigger='hover',
-                data-container='.layout__fixed'
-                data-delay='{"show":500,"hide":100}'
-              )._popover= self.t('menu_donate')
+            ul.navbar-nav.ms-auto
+              li.nav-item
+                a.nav-link(
+                  href='https://github.com/fontello/fontello?sponsor=1'
+                  target='_blank'
+                )= self.t('menu_donate')
 
           .notifications
 
       //- top toolbar/tabs
       .toolbar-container
         != self.partial('@fontello.blocks.toolbar')
-      .tabs-container.container
+      .tabs-container.container-fluid
         != self.partial('@fontello.blocks.tabs')
 
     != self.content

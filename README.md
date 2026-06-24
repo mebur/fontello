@@ -1,30 +1,18 @@
 Fontello - icon font scissors
 =============================
 
-[![Build Status](https://travis-ci.org/fontello/fontello.svg?branch=master)](https://travis-ci.org/fontello/fontello)
+[![CI](https://github.com/fontello/fontello/workflows/CI/badge.svg?branch=master)](https://github.com/fontello/fontello/actions)
+[![Gitter](https://badges.gitter.im/fontello/fontello.svg)](https://gitter.im/fontello/fontello)
 
-website: [fontello.com](http://fontello.com/), help: [wiki](https://github.com/fontello/fontello/wiki/Help)
+website: [fontello.com](https://fontello.com/), help: [wiki](https://github.com/fontello/fontello/wiki/Help)
 
-![](https://rawgithub.com/fontello/fontello/master/fontello-image.svg)
+[![](https://opencollective.com/puzrin/tiers/baker.svg?width=770)](https://opencollective.com/puzrin#category-CONTRIBUTE)
 
 This tool lets you combine icon webfonts for your own project. With fontello you can:
 
 1. shrink glyph collections, minimizing font size
 2. merge symbols from several fonts into a single file
 3. access large sets of professional-grade open source icons
-
-Now it's trivial to make a custom icon webfont, exactly for your needs.
-First, select the icons you like. Then update glyph codes (optional), and
-download your webfont bundle. We generate everything you need, ready for publishing
-on your website!
-
-
-## Compatibility
-
-1. Desktop is fully supported. IE6-7 requires alternate CSS.
-2. Mobiles - all modern systems work without problems. There are limits on very old androids
-   and rare browsers. Also, Windows Mobile IE9 sucks, as IE  usually does :) . See
-   [details](http://blog.kaelig.fr/post/33373448491/testing-font-face-support-on-mobile-and-tablet).
 
 
 ## Developers API
@@ -41,16 +29,16 @@ When more examples available, those will be added here.
 
 ### API methods
 
-1. `POST http://fontello.com/` creates a session with your config and
+1. `POST https://fontello.com/` creates a session with your config and
    return you `session_id`. You can use it later to open fontello with your configuration
    and to automatically download your font. Session is stored for 24h. POST params
    (form-encoded):
     - `config` - (Required) content of `config.json` for your font
     - `url` - (Optional) if used, download button will link to your admin panel, where you can
       run importing script.
-2. `http://fontello.com/[session_id]` - opening fontello with your config preloaded.
+2. `https://fontello.com/[session_id]` - opening fontello with your config preloaded.
    When you edit font, your config is automatically sent to server
-3. `http://fontello.com/[session_id]/get` - download your font.
+3. `https://fontello.com/[session_id]/get` - download your font.
 
 Note. When you open site via API url, `download` button will have another text.
 
@@ -65,25 +53,19 @@ Note. When you open site via API url, `download` button will have another text.
 * [fontello_rails_converter](https://github.com/railslove/fontello_rails_converter) - Ruby CLI gem for interacting with the API.  Additional features (Sass conversion) for Rails integration, but should work for every project.
 * [grunt-fontello](https://github.com/jubalm/grunt-fontello) - lightweight integration with grunt
 
-
-## Contacts
-
-- Questions: [Google group](https://groups.google.com/group/fontello/)
-- Bug reports: [Issue tracker](https://github.com/fontello/fontello/issues)
-- Suggestion for adding your OFL fonts or other collaborations: vitaly@rcdesign.ru
-
-
 ## Authors
 
-- Roman Shmelev ([shmelev](https://github.com/shmelev))
+- Roman Shmelev ([shmelev](https://github.com/shmelev)).
 - Vitaly Puzrin ([puzrin](https://github.com/puzrin)).
-  [Follow](https://twitter.com/puzrin) on twitter.
 - Aleksey Zapparov ([ixti](https://github.com/ixti)).
-  [Follow](https://twitter.com/zapparov) on twitter.
 - Evgeny Shkuropat ([shkuropat](https://github.com/shkuropat)).
 - Vladimir Zapparov ([dervus](https://github.com/dervus)).
+- Alex Kocharin ([rlidwka](https://github.com/rlidwka)).
 
-Thanks to [Hermanto Lim](https://github.com/nackle2k10) for the image.
+Thanks to:
+
+- [Werner Lemberg](https://github.com/lemzwerg) for help with ttfautohint.
+- [Hermanto Lim](https://github.com/nackle2k10) for the image.
 
 
 ## License

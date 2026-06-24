@@ -218,6 +218,8 @@ N.wire.once('navigate.done', { priority: -100 }, function () {
       parent.track(glyph);
 
       this.glyphs.push(glyph);
+
+      return glyph;
     };
 
     this.removeGlyph = function (uid) {
@@ -356,7 +358,16 @@ N.wire.once('navigate.done', { priority: -100 }, function () {
         return;
       }
 
-      var ff = fontface(self.makeSvgFont(), self.fontname);
+      var ff;
+
+      try {
+        ff = fontface(self.makeSvgFont(), self.fontname);
+      } catch (err) {
+        /* eslint-disable-next-line no-console */
+        console.log(err);
+        N.wire.emit('notify', String(err.message || err));
+        return;
+      }
 
       var styleTemplate = _.template(
         '<style id="ff_${fontId}" type="text/css">\n ${fontface}' +

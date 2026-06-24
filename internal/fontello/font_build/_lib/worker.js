@@ -11,12 +11,13 @@ const ttf2eot   = require('ttf2eot');
 const ttf2woff  = require('ttf2woff');
 const wawoff2   = require('wawoff2');
 const svg2ttf   = require('svg2ttf');
-const pug       = require('pug');
 const b64       = require('base64-js');
 const rimraf    = promisify(require('rimraf'));
 const mkdirp    = require('mkdirp');
 const glob      = promisify(require('glob'));
 const JSZip     = require('jszip');
+const pug       = require('pug');
+const ejs       = require('ejs');
 
 const read      = promisify(fs.readFile);
 const write     = promisify(fs.writeFile);
@@ -26,54 +27,57 @@ const execFile  = promisify(require('child_process').execFile);
 
 const TEMPLATES_DIR = path.join(__dirname, '../../../../support/font-templates');
 const TEMPLATES = {};
-const SVG_FONT_TEMPLATE = _.template(fs.readFileSync(path.join(TEMPLATES_DIR, 'font/svg.tpl'), 'utf8'));
+const SVG_FONT_TEMPLATE = ejs.compile(fs.readFileSync(path.join(TEMPLATES_DIR, 'font/svg.ejs'), 'utf8'));
 
 
 _.forEach({
-  'demo.pug':              'demo.html',
-  'css/css.pug':           'css/${FONTNAME}.css',
-  'css/css-ie7.pug':       'css/${FONTNAME}-ie7.css',
-  'css/css-codes.pug':     'css/${FONTNAME}-codes.css',
-  'css/css-ie7-codes.pug': 'css/${FONTNAME}-ie7-codes.css',
-  'css/css-embedded.pug':  'css/${FONTNAME}-embedded.css',
-  'LICENSE.pug':           'LICENSE.txt',
+  'demo.ejs':              'demo.html',
+  'css/css.ejs':           'css/${FONTNAME}.css',
+  'css/css-ie7.ejs':       'css/${FONTNAME}-ie7.css',
+  'css/css-codes.ejs':     'css/${FONTNAME}-codes.css',
+  'css/css-ie7-codes.ejs': 'css/${FONTNAME}-ie7-codes.css',
+  'css/css-embedded.ejs':  'css/${FONTNAME}-embedded.css',
+  'LICENSE.ejs':           'LICENSE.txt',
   'css/animation.css':     'css/animation.css',
   'README.txt':            'README.txt'
 }, (outputName, inputName) => {
-  let inputFile = path.join(TEMPLATES_DIR, inputName);
-  let inputData = fs.readFileSync(inputFile, 'utf8');
-  let outputData;
+  try {
+    let inputFile = path.join(TEMPLATES_DIR, inputName);
+    let inputData = fs.readFileSync(inputFile, 'utf8');
+    let outputData;
 
-  switch (path.extname(inputName)) {
-    case '.pug': // Pug template.
-      outputData = pug.compile(inputData, {
-        pretty: true,
-        filename: inputFile,
-        filters: [ require('jstransformer-stylus') ]
-      });
-      break;
+    switch (path.extname(inputName)) {
+      case '.pug': // Pug template.
+        outputData = pug.compile(inputData, {
+          pretty: true,
+          filename: inputFile,
+          filters: [ require('jstransformer-stylus') ]
+        });
+        break;
 
-    case '.tpl': // Lodash template.
-      outputData = _.template(inputData);
-      break;
+      case '.tpl': // Lodash template.
+        outputData = _.template(inputData);
+        break;
 
-    default: // Static file - just do a copy.
-      outputData = () => inputData;
-      break;
+      case '.ejs': // EJS template.
+        outputData = ejs.compile(inputData);
+        break;
+
+      default: // Static file - just do a copy.
+        outputData = () => inputData;
+        break;
+    }
+
+    TEMPLATES[outputName] = outputData;
+  } catch (err) {
+    throw new Error(`Unable to compile ${inputName}: ${err.message}`);
   }
-
-  TEMPLATES[outputName] = outputData;
 });
 
 
-module.exports = async function fontWorker(taskInfo) {
-  let logPrefix = '[font::' + taskInfo.fontId + ']';
-  let timeStart = Date.now();
+async function generateFont(taskInfo) {
   let fontname = taskInfo.builderConfig.font.fontname;
   let files;
-
-  taskInfo.logger.info(`${logPrefix} Start generation: ${JSON.stringify(taskInfo.clientConfig)}`);
-
 
   // Collect file paths.
   //
@@ -128,7 +132,6 @@ module.exports = async function fontWorker(taskInfo) {
     await rename(files.ttf, files.ttfUnhinted);
     await execFile('ttfautohint', [
       '--no-info',
-      '--windows-compatibility',
       '--symbol',
       // temporary workaround for #464
       // https://github.com/fontello/fontello/issues/464#issuecomment-202244651
@@ -147,14 +150,14 @@ module.exports = async function fontWorker(taskInfo) {
 
   // Convert TTF to EOT.
   //
-  let eotOutput = ttf2eot(ttfOutput).buffer;
+  let eotOutput = ttf2eot(ttfOutput);
 
   await write(files.eot, eotOutput);
 
 
   // Convert TTF to WOFF.
   //
-  let woffOutput = ttf2woff(ttfOutput).buffer;
+  let woffOutput = ttf2woff(ttfOutput);
 
   await write(files.woff, woffOutput);
 
@@ -204,11 +207,24 @@ module.exports = async function fontWorker(taskInfo) {
 
   let zipData = await zip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' });
 
-  // TODO: force tmp dir cleanup on fail
+  return zipData;
+}
 
-  // Remove temporary files and directories.
-  //
-  await rimraf(taskInfo.tmpDir);
+
+module.exports = async function fontWorker(taskInfo) {
+  let logPrefix = '[font::' + taskInfo.fontId + ']';
+  let timeStart = Date.now();
+
+  taskInfo.logger.info(`${logPrefix} Start generation: ${JSON.stringify(taskInfo.clientConfig)}`);
+
+  let zipData;
+
+  try {
+    zipData = await generateFont(taskInfo);
+  } finally {
+    // Remove temporary files and directories.
+    await rimraf(taskInfo.tmpDir);
+  }
 
 
   // Done.

@@ -1,11 +1,10 @@
 'use strict';
 
 
-var Bloodhound = require('typeahead.js/dist/bloodhound.js');
+var Bloodhound = require('corejs-typeahead/dist/bloodhound.js');
 var _  = require('lodash');
 var ko = require('knockout');
-
-var savedConfig = null;
+var deflate = require('pako/lib/deflate');
 
 
 var GLYPH_SIZE_MIN = 12;
@@ -90,12 +89,6 @@ N.wire.once('navigate.done', function (data) {
   function save() {
     if (!N.app.apiSessionId) { return Promise.resolve(); }
 
-    // Skip first  save attempt (it happens on app init)
-    if (!savedConfig) {
-      savedConfig = N.app.getConfig();
-      return Promise.resolve();
-    }
-
     toolbar.saving(true);
     return N.app.serverSave()
       .then(() => {
@@ -146,7 +139,10 @@ N.wire.once('navigate.done', function (data) {
     toolbar.building(true);
 
     let rpc_params = {
-      config: new Blob([ JSON.stringify(config) ], { type: 'application/json' })
+      config: new Blob(
+        [ deflate.gzip(JSON.stringify(config)) ],
+        { type: 'application/octet-stream' }
+      )
     };
 
     return N.io.rpc('fontello.font.generate', rpc_params).then(res => {
@@ -160,6 +156,9 @@ N.wire.once('navigate.done', function (data) {
         .attr({ id, src: url })
         .css('display', 'none')
         .appendTo(window.document.body);
+    }, err => {
+      toolbar.building(false);
+      throw err;
     });
   });
 
