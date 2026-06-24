@@ -58,7 +58,7 @@
     "mkdirp": "^1.0.4",
     "multiparty": "^4.2.2",
     "negotiator": "^0.6.2",
-    "node-sass": "^7.0.1",
+    "sass": "^1.77.0",
     "pako": "^2.0.3",
     "pointer": "^1.0.2",
     "postcss": "^8.3.5",
