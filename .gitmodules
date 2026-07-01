@@ -16,9 +16,6 @@
 [submodule "src/modernpics.font"]
 	path = src/modernpics.font
 	url = https://github.com/fontello/modernpics.font.git
-[submodule "src/typicons.font"]
-	path = src/typicons.font
-	url = https://github.com/fontello/typicons.font.git
 [submodule "src/meteocons.font"]
 	path = src/meteocons.font
 	url = https://github.com/fontello/meteocons.font.git
@@ -43,9 +40,9 @@
 [submodule "src/awesome5-uni.font"]
 	path = src/awesome5-uni.font
 	url = https://github.com/mebur/awesome5-uni.font.git
-[submodule "src/awesome5-solid-uni.font"]
-	path = src/awesome5-solid-uni.font
-	url = https://github.com/mebur/awesome5-solid-uni.font.git
-[submodule "src/awesome5-brands-uni.font"]
-	path = src/awesome5-brands-uni.font
-	url = https://github.com/mebur/awesome5-brands-uni.font.git
+[submodule "src/awesome6-uni.font"]
+	path = src/awesome6-uni.font
+	url = git@github.com:mebur/awesome6-uni.font.git
+[submodule "src/awesome7-uni.font"]
+	path = src/awesome7-uni.font
+	url = git@github.com:mebur/awesome7-uni.font.git
