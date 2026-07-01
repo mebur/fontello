@@ -155,8 +155,9 @@ _.forEach(args.input_fonts, function (fontDir) {
     var glyph_data = _.pick(glyph, [ 'css', 'code', 'uid', 'search', 'css-ext' ]);
 
     // Add char code in joined (embedded) font
-    // Skip U+FFF0–U+FFFF (Unicode Specials block): these are reserved/non-character
-    // code points that browsers won't render as custom font glyphs.
+    // Skip U+FEFF (BOM/Zero-Width No-Break Space) and U+FFF0–U+FFFF (Unicode Specials block):
+    // these are reserved/non-character code points that browsers won't render as custom font glyphs.
+    if (internalCode === 0xFEFF) { internalCode = 0xFF00; }
     if (internalCode >= 0xFFF0 && internalCode <= 0xFFFF) { internalCode = 0x10000; }
     glyph_data.charRef = internalCode;
     internalCode++;
