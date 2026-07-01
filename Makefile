@@ -1,8 +1,8 @@
 FONTS         += fontelico.font
-#FONTS         += awesome-uni.font
+FONTS         += awesome-uni.font
 FONTS         += awesome5-uni.font
-FONTS         += awesome5-solid-uni.font
-FONTS         += awesome5-brands-uni.font
+FONTS         += awesome6-uni.font
+FONTS         += awesome7-uni.font
 FONTS         += entypo
 FONTS         += typicons.font
 FONTS         += iconic-uni.font

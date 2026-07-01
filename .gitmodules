@@ -21,10 +21,10 @@
 	url = https://github.com/fontello/meteocons.font.git
 [submodule "src/zocial.font"]
 	path = src/zocial.font
-	url = https://github.com/fontello/zocial.font.git
+	url = git@github.com:mebur/zocial.font.git
 [submodule "src/maki.font"]
 	path = src/maki.font
-	url = https://github.com/fontello/maki.font.git
+	url = git@github.com:mebur/maki.font.git
 [submodule "src/fontelico.font"]
 	path = src/fontelico.font
 	url = https://github.com/fontello/fontelico.font.git
@@ -40,9 +40,13 @@
 [submodule "src/awesome5-uni.font"]
 	path = src/awesome5-uni.font
 	url = https://github.com/mebur/awesome5-uni.font.git
+	branch = HEAD
 [submodule "src/awesome6-uni.font"]
 	path = src/awesome6-uni.font
 	url = git@github.com:mebur/awesome6-uni.font.git
 [submodule "src/awesome7-uni.font"]
 	path = src/awesome7-uni.font
 	url = git@github.com:mebur/awesome7-uni.font.git
+[submodule "src/typicons.font"]
+	path = src/typicons.font
+	url = git@github.com:mebur/typicons.font.git

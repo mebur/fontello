@@ -23,7 +23,7 @@
     "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.14.5",
     "@popperjs/core": "^2.9.2",
-    "@xmldom/xmldom": "^0.9.10",
+    "xmldom": "npm:@xmldom/xmldom@^0.9.10",
     "argparse": "^2.0.1",
     "autoprefixer": "^10.2.6",
     "babelfish": "^2.0.0",
